@@ -15,6 +15,7 @@ type Client struct {
 	sequence        int
 	ws              *websocket.Conn
 	heartbeatTicker *time.Ticker
+	isConnected     bool
 }
 
 // NewClient creates a new bot client

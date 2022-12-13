@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -10,10 +11,20 @@ func startHeartbeat(client Client, interval int32) {
 	// create a ticker that ticks every 5 milliseconds
 	client.heartbeatTicker = time.NewTicker(5000 * time.Millisecond)
 
+	sendIdentify(client)
+
+
 	for {
+		if !client.isConnected {
+			// stop ticker
+			stopHeartbeat(client)
+			break
+		}
+
 		select {
 		case <-client.heartbeatTicker.C:
 			// send heartbeat
+			fmt.Println("SENDING HEARTBEAT")
 			client.writeData(map[string]interface{}{"op": 1, "d": client.sequence})
 		}
 	}
